@@ -9,7 +9,7 @@ ASP Ajaxed is a free Classic ASP library with built—in AJAX support.
 ## original project : 
 Asp-Ajaxed , https://code.google.com/p/asp-ajaxed/
 
-** It rapidly lets you build modern web applications according to current web standards. **
+**It rapidly lets you build modern web applications according to current web standards.**
 
 The ASP Ajaxed Library comes up with a unique AJAX technique which can be used within your classic ASP applications. You will be able to create rich web applications with little effort.
 
