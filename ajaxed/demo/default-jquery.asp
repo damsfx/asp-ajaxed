@@ -1,9 +1,12 @@
 <!--#include file="../ajaxed.asp"-->
+<!--#include file="../class_datatable/datatable.asp"-->
 <%
+AJAXED_JSENGINE = "jquery"
+
 set page = new AjaxedPage
+set dt = new Datatable
 with page
 	.title = "ajaxed demo - classic asp library"
-	.jsEngine = "jquery"
 	.defaultStructure = true
 	.draw()
 end with
@@ -14,6 +17,13 @@ end with
 sub init()
 	delay = str.parse(page.RF("delay"), 0)
 	if delay > 0 and delay < 5 then lib.sleep delay
+
+	' DataTables
+	db.open("Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\inetpub\wwwroot\asp-ajaxed-master\ajaxed\class_database\test.mdb;Uid=Admin;Pwd=;")
+	
+	dt.sql = "SELECT * FROM person"
+	dt.cssClass = "table"
+	dt.selection = "multiple"
 end sub
 
 '******************************************************************************************
@@ -30,14 +40,17 @@ sub callback(action)
 		'see also page.returnValue - with this you can return even more values in one go
 		'e.g. a recordset with data and a boolean flag which indicates something else
 	end if
+
+	' DataTables
+    dt.draw()
 end sub
 
 '******************************************************************************************
 '* header  
 '******************************************************************************************
 sub header()
-	page.loadCSSFile "../console/std.css", empty
-	page.loadJSFile "http://malsup.github.com/min/jquery.form.min.js"
+	page.loadCSSFile "demo.css", empty
+	' page.loadJSFile "http://malsup.github.com/min/jquery.form.min.js"
 end sub
 
 '******************************************************************************************
@@ -62,18 +75,21 @@ sub pagePart_one() %>
 	
 	<style>
 		body {
+			margin: 0;
 			padding:100px;
 			padding-top:20px;
 		}
+		hr { margin: 15px 0; }
 	</style>
 
-	<script>
+	<script type="text/javascript">
 		function added(sum) {
 			$('#c').val(sum);
 		}
 	</script>
 	
-	<h1>ajaxed v<%= lib.version %> Demo</h1>
+	<h1>Ajaxed v<%= lib.version %> Demo</h1>
+	<h2>Using <%= page.jsEngine %> library</h2>
 	
 	<form id="frm">
 	<div style="padding:20px;background:#eee;">
@@ -89,7 +105,8 @@ sub pagePart_one() %>
 		<input type="Text" name="c" id="c" size="4">
 		<button onclick="ajaxed.callback('add', added, null, null, 'default.asp')" type="button">calculate</button>
 	
-		<br><br>
+		<hr>
+
 		<strong>2. Using page parts</strong>
 		<p>
 			Ajaxed also supports loading whole HTML fragments. This functionality is called "page parts". Page parts 
@@ -97,10 +114,19 @@ sub pagePart_one() %>
 			of your choice. See a simple example:
 		</p>
 		
-		<a href="#" onclick="ajaxed.callback('one', 'content', null, null, 'default.asp')">Part one</a>
+		<a href="javascript:void(0)" onclick="ajaxed.callback('one', 'content', null, null, 'default.asp')">Part one</a>
 		&nbsp;&nbsp;
 		<a href="javascript:void(0)" onclick="ajaxed.callback('two', 'content', null, null, 'default.asp')">Part two</a>
 		<div id="content" style="margin-top:10px;"></div>
+
+		<hr>
+
+		<strong>3. Manipulate tables</strong>
+		<p>
+			Ajaxed supports manipulating datasource driven tables.
+		</p>
+		<% dt.draw() %>
+	</div>
 	</div>
 	
 		<br><br>
@@ -114,7 +140,5 @@ sub pagePart_one() %>
 	
 	<br><br>
 	<a href="http://www.ajaxed.org/">asp ajaxed</a>
-	
-	
 	
 <% end sub %>

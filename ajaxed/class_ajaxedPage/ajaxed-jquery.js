@@ -27,14 +27,14 @@
 function ajaxed() {};
 
 ajaxed.prototype.indicator = document.createElement('div');
+ajaxed.prototype.indicator.setAttribute('class','ajaxLoadingIndicator');
+
 
 $(document).ajaxStart(function(){ 
     s = ajaxed.prototype.indicator.style;
-    s.background = "#cc0000";
-    s.color = "#fff";
-    s.position = "absolute";
-    s.right = "4px";
-    s.top = "4px";
+    s.position = 'fixed';
+    s.top = '0px';
+    s.right = '0px';
     document.body.appendChild(ajaxed.prototype.indicator);
 });
 
@@ -43,24 +43,21 @@ $(document).ajaxStop(function(){
 });
 
 //optional: onComplete, url (because of bug in iis5 http://support.microsoft.com/kb/216493)
-ajaxed.callback = function(theAction, func, params, formid) { 
-
+ajaxed.callback = function(theAction, func, params, formid, onComplete ) { 
     if (params) {
-		params=jQuery.extend({}, params, {PageAjaxed: theAction});
+        params=jQuery.extend({}, params, {PageAjaxed: theAction});
     } else {
-		if ($('#' + formid).length) {
-			params = $('#' + formid).formSerialize() + "&PageAjaxed=" + theAction;
-		} else {
-			if ($('#frm').length) {
-				params = $('#frm').formSerialize() + "&PageAjaxed=" + theAction;
-			} else {
-				params = {};
-			}
-		}
+        if ($('#' + formid).length) {
+            params = $('#' + formid).formSerialize() + "&PageAjaxed=" + theAction;
+        } else {
+            if ($('#frm').length) {
+                params = $('#frm').formSerialize() + "&PageAjaxed=" + theAction;
+            } else {
+                params = {};
+            }
+        }
     }
-
     uri = window.location.href;
-
     uri = window.location.href.replace(/#.*$/ig, '');
 	if (ajaxed.prototype.debug) ajaxed.debug("Action (to be handled in callback):\n\n" + theAction);
     if (ajaxed.prototype.debug) ajaxed.debug("URL called:\n\n" + uri);
@@ -82,8 +79,14 @@ ajaxed.callback = function(theAction, func, params, formid) {
             }
         },
         "text"
-    ).fail(function(trans, textStatus, errorThrown) {
-        alert( "error whith ajax request\n\n" );
+    )
+    .done(function() {
+        if (typeof onComplete === 'function') {
+            onComplete();
+        };
+    })
+    .fail(function(trans, textStatus, errorThrown) {
+        console.log( "error whith ajax request\n\n", trans, textStatus, errorThrown);
     });
 }
 ajaxed.callbackFailure = function(data) {

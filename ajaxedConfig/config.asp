@@ -26,7 +26,8 @@
 '	The console still relies on prototype.
 	'AJAXED_LOADJS = true
 
-'should the prototype JavaScript library be automatically loaded on every page?
+'which type of javascript engine to use Ajaxed?
+'	default or '' = Prototype.js, 'jquery' = jQuery.js)
 	'AJAXED_JSENGINE = "jquery"
 
 'should the prototype JavaScript library be automatically loaded on every page?

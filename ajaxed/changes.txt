@@ -1,4 +1,9 @@
-﻿v 2.1.2
+﻿v 2.1.3
+[03 October, 2017] [damien MATHIEU <damsfx#gmail.com>]
+- Fixes issue #1
+- Update demos styles and scripts
+
+v 2.1.2
 [27 Nomvember, 2013] [damien MATHIEU <damsfx#gmail.com>]
 - configuration variable for Javascript engine choice added: AJAXED_JSENGINE. 
 	Possibility to switch to jQuery 1.9.1

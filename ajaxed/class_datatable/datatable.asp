@@ -106,6 +106,8 @@ class Datatable
 							''Example of a link: <em>user.asp?i={id}</em> (which means that the ID columns value will be passed into the user.asp file as a parameter called i).
 							''The link can be deactivated for specified columns by setting the <em>enableLink</em> property to FALSE.
 							''Note: Only letters, numbers and underscores are allowed for the placeholders.
+	public jsEngine			''[string] Name of the javascript engine. default = 'prototype'
+
 	
 	public property get recordLinkF ''[string] gets the link (if any specified with <em>recordLink</em>) for the current record (placeholders replaced). only available during runtime.
 		if not dataLoaded then lib.throwError("Datatable.recordLinkF is only accessible after draw() has been called.")
@@ -201,6 +203,8 @@ class Datatable
 		set p_row.dt = me
 		fullsearch = true
 		totalRecords = 0
+		jsEngine = lib.init(AJAXED_JSENGINE, "prototype")
+		
 		'set dictionary = lib.newDict(empty)
 		'server.execute(path("de.asp"))
 		'lib.logger.debug dictionary.count
@@ -225,7 +229,7 @@ class Datatable
 		end if
 		if not callback then
 			if not isEmpty(css) then lib.page.loadCSSFile css, empty
-			lib.page.loadJSFile(path("datatable.js"))
+			lib.page.loadJSFile(path("datatable-"& jsEngine &".js"))
 			str.write("<table " & _
 				attribute("id", ID) & _
 				attribute("class", "axd_dt " & cssClass) & " " & _

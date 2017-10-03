@@ -101,7 +101,7 @@ class DatatableRow
 			if dt.selection = "single" then singl = true
 			output("<input")
 			output(dt.attribute("type", lib.iif(singl, "radio", "checkbox")))
-			output(dt.attribute("name", dt.ID))
+			output(dt.attribute("name", dt.ID & lib.iif(singl, "rd", "cb[]") ))
 			output(dt.attribute("value", PK))
 			output(dt.attribute("disabled", lib.iif(disabled, "disabled", empty)))
 			output(dt.attribute("checked", lib.iif(selected, "checked", empty)))
